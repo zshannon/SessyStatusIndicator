@@ -32,6 +32,11 @@
                                     <constraint firstAttribute="width" constant="60" id="O0C-TO-ict"/>
                                     <constraint firstAttribute="width" secondItem="fOO-fm-QbI" secondAttribute="height" id="iyW-tV-yT0"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="bottomConstraint" destination="zgH-N1-RaV" id="h6Z-lE-qBs"/>
+                                    <outlet property="leadingConstraint" destination="fQK-0X-Qqx" id="Bbr-Av-aUP"/>
+                                    <outlet property="widthConstraint" destination="jJY-CA-EmF" id="OLc-qM-Dhw"/>
+                                </connections>
                             </view>
                         </subviews>
                         <constraints>

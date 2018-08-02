@@ -9,6 +9,10 @@
 import Charts
 import UIKit
 
+enum SessyStatusIndicatorError: Error {
+  case valueTooLarge
+}
+
 public class SessyStatusIndicator: UIView {
   
   public typealias SessyStatusIndicatorCallbackClosure = (Bool) -> Void
@@ -18,7 +22,6 @@ public class SessyStatusIndicator: UIView {
   
   @IBOutlet weak public var bottomConstraint: NSLayoutConstraint?
   @IBOutlet weak public var leadingConstraint: NSLayoutConstraint?
-  @IBOutlet weak public var trailingConstraint: NSLayoutConstraint?
   @IBOutlet weak public var widthConstraint: NSLayoutConstraint?
   
   private lazy var pieChart: PieChartView = {
@@ -42,25 +45,50 @@ public class SessyStatusIndicator: UIView {
     self.setup()
   }
   
-  public func set(_ value: Double, _ completion: SessyStatusIndicatorCallbackClosure? = nil) {
-    guard value <= 1.0 else {
+  override public func layoutSubviews() {
+    super.layoutSubviews()
+    if self.leadingConstraintConstant == nil {
+      self.leadingConstraintConstant = self.leadingConstraint?.constant
+    }
+    guard let leadingConstraintConstant = self.leadingConstraintConstant else {
+      return
+    }
+    self.leadingConstraint?.constant = CGFloat((-1 * leadingConstraintConstant)) - self.frame.width
+  }
+  
+  public func set(_ value: Double, _ completion: SessyStatusIndicatorCallbackClosure? = nil) throws {
+    guard let leadingConstraintConstant = self.leadingConstraintConstant, value <= 1.0 else {
       completion?(false)
-      return // TODO: raise error
+      throw SessyStatusIndicatorError.valueTooLarge
     }
     self.renderChart(value)
     if value == 1.0 {
-      UIView.animate(withDuration: 0.3) {
+      self.leadingConstraint?.constant = CGFloat((-1 * leadingConstraintConstant)) - self.frame.width
+      UIView.animate(withDuration: 0.30, animations: {
         self.alpha = 0.0
+        self.superview?.layoutIfNeeded()
+      }) { (_) in
+        completion?(true)
       }
     }
     else {
-      UIView.animate(withDuration: 0.15) {
-        self.alpha = 1.0
+      if self.leadingConstraint?.constant != CGFloat(leadingConstraintConstant) {
+        self.leadingConstraint?.constant = CGFloat(leadingConstraintConstant)
+        UIView.animate(withDuration: 0.30, animations: {
+          self.alpha = 1.0
+          self.superview?.layoutIfNeeded()
+        }) { (_) in
+          completion?(true)
+        }
+      }
+      else {
+        completion?(true)
       }
     }
   }
   
   private var isSetup = false
+  private var leadingConstraintConstant: CGFloat?
   private func setup() {
     if self.isSetup {
       return
@@ -76,6 +104,7 @@ public class SessyStatusIndicator: UIView {
     self.alpha = 0.0
     self.clipsToBounds = true
     self.layer.cornerRadius = self.borderRadius
+    self.leadingConstraint?.constant = -1 * self.frame.width
     self.addSubview(pieChart)
     pieChart.centerXAnchor.constraint(equalTo: centerXAnchor, constant: 0).isActive = true
     pieChart.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 0).isActive = true
