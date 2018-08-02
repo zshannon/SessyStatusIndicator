@@ -1,0 +1,29 @@
+PODS:
+  - Charts (3.1.1):
+    - Charts/Core (= 3.1.1)
+  - Charts/Core (3.1.1)
+  - SessyStatusIndicator (1.0.0):
+    - Charts
+  - SwiftGen (5.3.0)
+
+DEPENDENCIES:
+  - SessyStatusIndicator (from `.`)
+  - SwiftGen
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - Charts
+    - SwiftGen
+
+EXTERNAL SOURCES:
+  SessyStatusIndicator:
+    :path: "."
+
+SPEC CHECKSUMS:
+  Charts: 90a4d61da0f6e06684c591e3bcab11940fe61736
+  SessyStatusIndicator: dbbaf257175ad733a412434ae76a6c4537db236b
+  SwiftGen: 4379bd3640b0a212a0f6ea3c494adba385513d10
+
+PODFILE CHECKSUM: bd9e0561d89552dd17c6d341f5f3c354db1df091
+
+COCOAPODS: 1.5.0
