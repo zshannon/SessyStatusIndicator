@@ -117,7 +117,7 @@ public class SessyStatusIndicator: UIView {
   private func renderChart(_ value: Double = 0.0) {
     let dataEntries = [PieChartDataEntry(value: 1.0 - value), PieChartDataEntry(value: value)]
     let chartDataSet = PieChartDataSet(values: dataEntries, label: nil)
-    chartDataSet.colors = [self.backgroundColor!, self.tintColor]
+    chartDataSet.colors = [self.backgroundColor ?? .white, self.tintColor]
     chartDataSet.drawValuesEnabled = false
     chartDataSet.drawIconsEnabled = false
 
